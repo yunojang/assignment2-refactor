@@ -10,15 +10,17 @@ const Button = styled.button`
   background: rgb(215,215,215);
   border-radius: 4px;
   cursor: pointer;
-  padding: 7px 11px;
+  padding: 10px 12px;
   font-weight: bold;
 `;
 
 function ButtonContainer(props) {
+  
+
   return (
     <Container>
       <Button onClick={props.loadNewItem}>랜덤 상품 보기</Button>
-      <Button>관심없음</Button>
+      <Button onClick={props.unInterest}>관심없음</Button>
     </Container>
   )
 }

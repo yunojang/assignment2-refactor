@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { fetchData } from 'utils/api';
 import { getRandomItem } from 'utils/random';
 import { priceFormat } from 'utils/format';
+import { uninterestStorage } from 'store'
 
 import ButtonContainer from './Components/ButtonContainer';
 
@@ -57,20 +58,27 @@ function Product() {
 
   const loadNewItem = async () => {
     const products = await fetchData('product');
+    const filtedProducts = products.filter(product => !uninterestStorage.includes(product));
 
-    const item = getRandomItem(products);
+    const item = getRandomItem(filtedProducts);
 
     setCurrentItem(item);
   }
 
+  const unInterest = () => {
+    uninterestStorage.push(currentItem);
+
+    loadNewItem();
+  }
+
   if (!currentItem.id) return null;
-  
+
   return (
     <Container>
       <ImageContainer>
-        <img alt='제품 이미지' src={currentItem.image}/>
+        <img alt='제품 이미지' src={currentItem.image} />
       </ImageContainer>
-     
+
       <Title>{currentItem.title}</Title>
 
       <Description>
@@ -78,7 +86,10 @@ function Product() {
         <Price><span>{priceFormat(currentItem.price)}</span>원</Price>
       </Description>
 
-      <ButtonContainer loadNewItem={loadNewItem} />
+      <ButtonContainer
+        loadNewItem={loadNewItem}
+        unInterest={unInterest}
+      />
     </Container>
   )
 }

@@ -7,7 +7,7 @@ export async function fetchData(type) {
   let { data } = await axios.get(`${BASE_URL}/${type}.json`);
 
   if (type === 'product') {
-    data = data.map((v, i) => ({ ...v, id: i + 1 }));
+    data = data.map((v, i) => ({ id: i + 1, ...v }));
     data = addImage(data);
   }
 
