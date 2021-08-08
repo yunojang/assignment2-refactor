@@ -1,8 +1,8 @@
 import { LS_KEYNAME } from 'constant/keyName';
-import { ArrayStorage } from 'utils/localStorage';
+import { ListStorage } from 'utils/localStorage';
 
-const uninterestStorage = new ArrayStorage(LS_KEYNAME.UNINTEREST);
-const recentShowStorage = new ArrayStorage(LS_KEYNAME.RECENT_SHOW);
+const uninterestStorage = new ListStorage(LS_KEYNAME.UNINTEREST);
+const recentShowStorage = new ListStorage(LS_KEYNAME.RECENT_SHOW);
 
 export {
   uninterestStorage,

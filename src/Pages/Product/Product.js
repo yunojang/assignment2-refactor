@@ -3,22 +3,24 @@ import styled from 'styled-components';
 import { fetchData } from 'utils/api';
 import { getRandomItem } from 'utils/random';
 import { priceFormat } from 'utils/format';
-import { uninterestStorage } from 'store'
+import { uninterestStorage, recentShowStorage } from 'store'
 
 import ButtonContainer from './Components/ButtonContainer';
 
 const Container = styled.div`
   max-width: 500px;
   margin: auto;
-  padding: 55px 25px;
+  padding: 55px 25px 25px 25px;
   display: flex;
   flex-direction: column;
+  background: rgb(245,245,245);
 `;
 
 const ImageContainer = styled.div`
   max-width: 100%;
   height: 500px;
   display: flex;
+  justify-content: center;
   align-items: center;
   margin-bottom: 40px;
 
@@ -62,11 +64,12 @@ function Product() {
 
     const item = getRandomItem(filtedProducts);
 
+    recentShowStorage.push({id:item.id, time:Date.now()});
     setCurrentItem(item);
   }
 
   const unInterest = () => {
-    uninterestStorage.push(currentItem);
+    uninterestStorage.push({id:currentItem.id, time:Date.now()});
 
     loadNewItem();
   }

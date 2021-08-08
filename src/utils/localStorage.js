@@ -6,7 +6,7 @@ export function setItem(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
-export class ArrayStorage {
+export class ListStorage {
   constructor(keyName) {
     this.keyName = keyName;
 
@@ -30,6 +30,10 @@ export class ArrayStorage {
       return;
     }
 
+    if (this.includes(item)) {
+      this.list.splice(this.indexOf(item),1);
+    }
+
     this.list.push(item);
     this.save();
   }
@@ -41,5 +45,15 @@ export class ArrayStorage {
     }
 
     return this.list.some(v => v.id === item.id);
+  }
+
+  indexOf(item) {
+    for (const index in this.list) {
+      if ( item.id === this.list[index].id) {
+        return index;
+      }
+    }
+
+    return -1;
   }
 }
