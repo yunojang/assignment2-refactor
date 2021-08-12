@@ -1,11 +1,69 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { fetchData } from 'utils/api';
+import { fetchProducts } from 'utils/api';
 import { getRandomItem } from 'utils/random';
 import { priceFormat } from 'utils/format';
 import { uninterestStorage, recentShowStorage } from 'store'
 
 import ButtonContainer from './Components/ButtonContainer';
+import { useHistory } from 'react-router-dom';
+
+function Product() {
+  const history = useHistory();
+  const [currentItem, setCurrentItem] = useState({});
+
+  useEffect(() => {
+    const item = history.location.state;
+
+    if (item) {
+      recentShowStorage.push({ id: item.id, time: Date.now() });
+      setCurrentItem(item);
+    }
+    else {
+      loadRandomItem();
+    }
+  }, [history.location.state])
+
+  const loadRandomItem = async () => {
+    const products = await fetchProducts();
+    const interestProducts = products.filter(product => !uninterestStorage.includes(product));
+
+    const item = getRandomItem(interestProducts);
+
+    recentShowStorage.push({ id: item.id, time: Date.now() });
+    setCurrentItem(item);
+  }
+
+  const unInterest = () => {
+    uninterestStorage.push({ id: currentItem.id, time: Date.now() });
+
+    loadRandomItem();
+  }
+
+  if (!currentItem.id) return null;
+
+  return (
+    <Container>
+      <ImageContainer>
+        <img alt='제품 이미지' src={currentItem.image} />
+      </ImageContainer>
+
+      <Title>{currentItem.title}</Title>
+
+      <Description>
+        <Brand>{currentItem.brand}</Brand>
+        <Price><span>{priceFormat(currentItem.price)}</span>원</Price>
+      </Description>
+
+      <ButtonContainer
+        loadRandomItem={loadRandomItem}
+        unInterest={unInterest}
+      />
+    </Container>
+  )
+}
+
+export default Product;
 
 const Container = styled.div`
   max-width: 500px;
@@ -50,51 +108,3 @@ const Price = styled.div`
     color: rgb(250,50,70);
   }
 `;
-
-function Product() {
-  const [currentItem, setCurrentItem] = useState({});
-
-  useEffect(() => {
-    loadNewItem();
-  }, [])
-
-  const loadNewItem = async () => {
-    const products = await fetchData('product');
-    const filtedProducts = products.filter(product => !uninterestStorage.includes(product));
-
-    const item = getRandomItem(filtedProducts);
-
-    recentShowStorage.push({id:item.id, time:Date.now()});
-    setCurrentItem(item);
-  }
-
-  const unInterest = () => {
-    uninterestStorage.push({id:currentItem.id, time:Date.now()});
-
-    loadNewItem();
-  }
-
-  if (!currentItem.id) return null;
-
-  return (
-    <Container>
-      <ImageContainer>
-        <img alt='제품 이미지' src={currentItem.image} />
-      </ImageContainer>
-
-      <Title>{currentItem.title}</Title>
-
-      <Description>
-        <Brand>{currentItem.brand}</Brand>
-        <Price><span>{priceFormat(currentItem.price)}</span>원</Price>
-      </Description>
-
-      <ButtonContainer
-        loadNewItem={loadNewItem}
-        unInterest={unInterest}
-      />
-    </Container>
-  )
-}
-
-export default Product;

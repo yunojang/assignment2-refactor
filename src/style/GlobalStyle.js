@@ -10,6 +10,10 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Nanum Gothic', sans-serif;
     box-sizing: border-box;
   }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 `;
 
 export default GlobalStyle;

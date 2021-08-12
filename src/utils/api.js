@@ -1,15 +1,12 @@
 import axios from 'axios';
-import { addImage } from './product';
 
 const BASE_URL = '/asset';
+const IMAGE_URL = '/images';
 
-export async function fetchData(type) {
-  let { data } = await axios.get(`${BASE_URL}/${type}.json`);
+export async function fetchProducts() {
+  const { data } = await axios.get(`${BASE_URL}/product.json`);
 
-  if (type === 'product') {
-    data = data.map((v, i) => ({ id: i + 1, ...v }));
-    data = addImage(data);
-  }
+  const products = data.map((v, i) => ({ id: i + 1, image: `${IMAGE_URL}/${v.brand}.jpg`, ...v }));
 
-  return data;
+  return products;
 }

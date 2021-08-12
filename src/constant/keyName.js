@@ -1,4 +1,4 @@
-export const LS_KEYNAME = {
+export const LOCAL_STORAGE = {
   RECENT_SHOW : 'recent-show',
   UNINTEREST : 'uninterest',
 }
