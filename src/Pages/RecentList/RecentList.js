@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { recentShowStorage } from 'store';
+import { recentShowStorage, uninterestStorage } from 'store';
 import { fetchProducts } from 'utils/api';
 import { recentSort, priceSort } from './utils/sort';
 
@@ -18,6 +18,21 @@ function RecentList() {
   const [list, setList] = useState([]);
   const [sortType, setSortType] = useState(SORT_TYPE.RECENT);
   const [showBrands, setShowBrands] = useState([]);
+  const [isOnlyInterest, setOnlyInterest] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const products = await fetchProducts();
+
+      let showList =
+        products
+          .filter(product => recentShowStorage.includes(product))
+          .map(product => ({ ...product, time: recentShowStorage.list[recentShowStorage.indexOf(product)].time }))
+
+      setBase(showList);
+      setList(showList);
+    })();
+  }, [])
 
   const sortFunction = (type) => {
     if (type === SORT_TYPE.RECENT) {
@@ -29,31 +44,21 @@ function RecentList() {
   }
 
   useEffect(() => {
-    (async () => {
-      const recentShowIds = recentShowStorage.list.map(v => v.id);
-      const products = await fetchProducts();
-
-      let showList =
-        products
-          .filter(product => recentShowIds.includes(product.id))
-          .map(product => ({ ...product, time: recentShowStorage.list[recentShowStorage.indexOf(product)].time }))
-
-      setBase(showList);
-      setList(showList);
-    })();
-  }, [])
-
-  useEffect(()=> {
-    if (showBrands.length) {
-      setList(base.filter(v=>showBrands.includes(v.brand)))
-    } 
-    else {
-      setList(base);
+    let filtedList = Array.from(base);
+    
+    if (isOnlyInterest) {
+      filtedList = filtedList.filter(item => !uninterestStorage.includes(item));
     }
-    
-    setList(list => Array.from(list).sort(sortFunction(sortType)))
-    
-  },[base,showBrands,sortType])
+
+    if (showBrands.length) {
+      filtedList = filtedList.filter(v=>showBrands.includes(v.brand));
+    } 
+
+    filtedList = filtedList.sort(sortFunction(sortType));
+
+    setList(filtedList);
+
+  }, [base, showBrands, sortType, isOnlyInterest])
 
   const renderList = () => {
     return list.map(item => <Product key={item.id} item={item} />)
@@ -66,6 +71,7 @@ function RecentList() {
         setSortType={setSortType}
         sortType={sortType}
         setShowBrands={setShowBrands}
+        setOnlyInterest={setOnlyInterest}
       />
 
       <Count><span>{list.length}</span>개의 상품</Count>

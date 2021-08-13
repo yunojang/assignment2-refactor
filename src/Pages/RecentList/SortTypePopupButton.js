@@ -50,7 +50,7 @@ const Button = styled.button`
   padding: 10px;
   border: 0;
   border-radius: 5px;
-  background: #33aaff;
+  background: #33a5ff;
   color: #fff;
 `;
 
