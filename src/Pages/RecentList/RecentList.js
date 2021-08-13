@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { recentShowStorage } from 'store';
 import styled from 'styled-components';
+
+import { recentShowStorage } from 'store';
 import { fetchProducts } from 'utils/api';
 import { recentSort, priceSort } from './utils/sort';
+
 import Product from './Components/Product';
 import Filter from './Filter';
 
@@ -15,21 +17,30 @@ function RecentList() {
   const [list, setList] = useState([]);
   const [sortType, setSortType] = useState(SORT_TYPE.RECENT);
 
+  const sortFunction = (type) => {
+    if (type === SORT_TYPE.RECENT) {
+      return recentSort;
+    }
+    else if (type === SORT_TYPE.PRICE) {
+      return priceSort;
+    }
+  }
+
   useEffect(() => {
     (async () => {
       const recentShowIds = recentShowStorage.list.map(v => v.id);
       const products = await fetchProducts();
 
-      const showingList = 
-      products
-        .filter(product => recentShowIds.includes(product.id))
-        .map(product => ({ ...product, time: recentShowStorage.list[recentShowStorage.indexOf(product)].time }))
-        .sort(recentSort);
+      const showingList =
+        products
+          .filter(product => recentShowIds.includes(product.id))
+          .map(product => ({ ...product, time: recentShowStorage.list[recentShowStorage.indexOf(product)].time }))
+          .sort(sortFunction(sortType));
 
       setList(showingList);
     })();
-    
-  }, [])
+
+  }, [sortType])
 
   const renderList = () => {
     return list.map(item => <Product key={item.id} item={item} />)
@@ -38,7 +49,7 @@ function RecentList() {
   return (
     <Container>
       <Title>최근 조회 목록</Title>
-      <Filter />
+      <Filter setSortType={setSortType} />
       {renderList()}
       <Alert hidden={list.length !== 0}>최근 조회한 목록이 없습니다.</Alert>
     </Container>
