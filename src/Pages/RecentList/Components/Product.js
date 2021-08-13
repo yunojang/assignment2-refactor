@@ -4,11 +4,11 @@ import { priceFormat } from 'utils/format';
 
 import ROUTES_PATH from 'constant/routesPath';
 
-function Product(props) {
-  const { title, brand, price } = props.item;
+function Product({ info }) {
+  const { title, brand, price } = info;
 
   return (
-    <ProductLink to={{ pathname: ROUTES_PATH.PRODUCT, state: props.item }}>
+    <ProductLink to={{ pathname: ROUTES_PATH.PRODUCT, info: info }}>
       <Title>{title}</Title>
       <Info>
         <Brand>{brand}</Brand>

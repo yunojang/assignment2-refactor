@@ -13,55 +13,78 @@ const SORT_TYPE = {
   PRICE: 'price',
 }
 
+let base = [];
+
 function RecentList() {
-  const [base, setBase] = useState([]);
   const [list, setList] = useState([]);
   const [sortType, setSortType] = useState(SORT_TYPE.RECENT);
   const [showBrands, setShowBrands] = useState([]);
   const [isOnlyInterest, setOnlyInterest] = useState(false);
 
   useEffect(() => {
-    (async () => {
+    const isProductShow = product => {
+      return recentShowStorage.includes(product);
+    }
+  
+    const createShowItem = product => {
+      return { ...product, time: recentShowStorage.list[recentShowStorage.indexOf(product)].time };
+    }
+
+    const createBaseList = async () => {
       const products = await fetchProducts();
 
-      let showList =
-        products
-          .filter(product => recentShowStorage.includes(product))
-          .map(product => ({ ...product, time: recentShowStorage.list[recentShowStorage.indexOf(product)].time }))
+      const baseList = products
+        .filter(isProductShow)
+        .map(createShowItem)
 
-      setBase(showList);
-      setList(showList);
-    })();
+      base = baseList;
+      setList(baseList);
+    };
+
+    createBaseList();
   }, [])
 
-  const sortFunction = (type) => {
-    if (type === SORT_TYPE.RECENT) {
-      return recentSort;
-    }
-    else if (type === SORT_TYPE.PRICE) {
-      return priceSort;
-    }
-  }
-
   useEffect(() => {
-    let filtedList = Array.from(base);
-    
-    if (isOnlyInterest) {
-      filtedList = filtedList.filter(item => !uninterestStorage.includes(item));
+    const isProductInterest = item => {
+      return !uninterestStorage.includes(item)
     }
 
-    if (showBrands.length) {
-      filtedList = filtedList.filter(v=>showBrands.includes(v.brand));
-    } 
+    const isSelectedBrand = item => {
+      return showBrands.includes(item.brand);
+    }
 
-    filtedList = filtedList.sort(sortFunction(sortType));
+    const filterList = (baseList) => {
+      let filtedList = Array.from(baseList);
 
-    setList(filtedList);
+      if (isOnlyInterest) {
+        filtedList = filtedList.filter(isProductInterest);
+      }
+  
+      if (showBrands.length) {
+        filtedList = filtedList.filter(isSelectedBrand);
+      }
+  
+      return filtedList;
+    }
 
-  }, [base, showBrands, sortType, isOnlyInterest])
+    const sortList = (baseList) => {
+      if (sortType === SORT_TYPE.RECENT) {
+        return baseList.sort(recentSort);
+      }
+      else if (sortType === SORT_TYPE.PRICE) {
+        return baseList.sort(priceSort);
+      }
+    }
+    
+    const filtedList = filterList(base);
+    const sortedList = sortList(filtedList);
+
+    setList(sortedList);
+
+  }, [showBrands, sortType, isOnlyInterest])
 
   const renderList = () => {
-    return list.map(item => <Product key={item.id} item={item} />)
+    return list.map(item => <Product key={item.id} info={item} />)
   }
 
   return (
