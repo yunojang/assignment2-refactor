@@ -3,10 +3,17 @@ import BrandFilter from './BrandFilter';
 import SortTypePopupButton from './SortTypePopupButton';
 
 function Filter(props) {
-  return(
+  return (
     <Container>
-      <BrandFilter />
-      <SortTypePopupButton setSortType={props.setSortType}/>
+      <BrandFilter 
+        setShowBrands={props.setShowBrands}
+      />
+
+      <SortTypePopupButton 
+        setSortType={props.setSortType} 
+        sortType={props.sortType}
+      >정렬 순서</SortTypePopupButton>
+
     </Container>
   )
 }

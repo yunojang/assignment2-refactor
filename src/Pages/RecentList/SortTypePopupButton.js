@@ -18,7 +18,7 @@ function SortTypePopupButton(props) {
 
   return (
     <>
-      <Button onClick={togglePopup}>정렬</Button>
+      <Button onClick={togglePopup}>{props.children}</Button>
 
       <Modal
         toggle={togglePopup}
@@ -30,12 +30,14 @@ function SortTypePopupButton(props) {
             name='sort'
             value='recent'
             label='최근 조회 순'
+            checked={props.sortType === 'recent'}
             onChange = {onChange}
           />
           <Radio
             name='sort'
             value='price'
             label='높은 가격 순'
+            checked={props.sortType === 'price'}
             onChange = {onChange}
           />
         </Form>
@@ -45,10 +47,11 @@ function SortTypePopupButton(props) {
 }
 
 const Button = styled.button`
-  padding: 10px 15px;
-  background: #dfdfdf;
-  border-radius: 5px;
+  padding: 10px;
   border: 0;
+  border-radius: 5px;
+  background: #33aaff;
+  color: #fff;
 `;
 
 const Form = styled.div`
