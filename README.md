@@ -6,7 +6,7 @@ Preonboarding-mr.carmmel-refactoring
 * 최근 조회 목록을 필터링, 정렬하여 확인할 수 있습니다.
 
 - **기술 스택** : React, styled-component
-- **배포 주소** : 
+- **배포 주소** : https://vigilant-archimedes-19da64.netlify.app/
 
 ## 구현사항 
 * 상품 랜덤 조회 및 관심 없음 표시
