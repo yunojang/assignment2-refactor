@@ -4,11 +4,11 @@ import { priceFormat } from 'utils/format';
 
 import ROUTES_PATH from 'constant/routesPath';
 
-function Product(props) {
-  const { title, brand, price } = props.item;
+function Product({ info }) {
+  const { title, brand, price } = info;
 
   return (
-    <ProductLink to={{ pathname: ROUTES_PATH.PRODUCT, state: props.item }}>
+    <ProductLink to={{ pathname: ROUTES_PATH.PRODUCT, info: info }}>
       <Title>{title}</Title>
       <Info>
         <Brand>{brand}</Brand>
@@ -24,7 +24,7 @@ const ProductLink = styled(Link)`
   display: flex;
   justify-content: space-between;
   background: rgb(250,250,250);
-  padding: 8px 10px;
+  padding: 10px 12px;
 
   &:nth-child(odd) {
     background: rgb(240,240,240);
@@ -47,9 +47,9 @@ const Info = styled.div`
 `;
 
 const Brand = styled.span`
-  font-size: 14px;
+  font-size: 13px;
   margin-right: 20px;
-  color: #aaa;
+  color: #999;
 `;
 
 const Price = styled.span`

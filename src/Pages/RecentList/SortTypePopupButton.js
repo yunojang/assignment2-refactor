@@ -4,10 +4,10 @@ import Modal from 'Components/Modal';
 import Radio from 'Components/Form/Radio';
 
 function SortTypePopupButton(props) {
-  const [isOpenPopup, setIsOpenPopup] = useState(false);
+  const [popupOpend, setPopupOpend] = useState(false);
 
   const togglePopup = () => {
-    setIsOpenPopup(prev => !prev);
+    setPopupOpend(prev => !prev);
   }
 
   const onChange = e => {
@@ -18,24 +18,26 @@ function SortTypePopupButton(props) {
 
   return (
     <>
-      <Button onClick={togglePopup}>정렬</Button>
+      <Button onClick={togglePopup}>{props.children}</Button>
 
       <Modal
+        title='정렬'
         toggle={togglePopup}
-        hidden={!isOpenPopup}
+        hidden={!popupOpend}
       >
         <Form>
-          정렬
           <Radio
             name='sort'
             value='recent'
             label='최근 조회 순'
+            checked={props.sortType === 'recent'}
             onChange = {onChange}
           />
           <Radio
             name='sort'
             value='price'
             label='높은 가격 순'
+            checked={props.sortType === 'price'}
             onChange = {onChange}
           />
         </Form>
@@ -45,10 +47,11 @@ function SortTypePopupButton(props) {
 }
 
 const Button = styled.button`
-  padding: 10px 15px;
-  background: #dfdfdf;
-  border-radius: 5px;
+  padding: 10px;
   border: 0;
+  border-radius: 5px;
+  background: #33a5ff;
+  color: #fff;
 `;
 
 const Form = styled.div`

@@ -15,11 +15,9 @@ const Button = styled.button`
 `;
 
 function ButtonContainer(props) {
-  
-
   return (
     <Container>
-      <Button onClick={props.loadRandomItem}>랜덤 상품 보기</Button>
+      <Button onClick={props.loadRandomIntrestItem}>랜덤 상품 보기</Button>
       <Button onClick={props.unInterest}>관심없음</Button>
     </Container>
   )

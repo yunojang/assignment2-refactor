@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { fetchProducts } from 'utils/api';
-import { getRandomItem } from 'utils/random';
+import { getRandomItem } from 'utils/array';
 import { priceFormat } from 'utils/format';
 import { uninterestStorage, recentShowStorage } from 'store'
 
@@ -11,33 +11,49 @@ import { useHistory } from 'react-router-dom';
 function Product() {
   const history = useHistory();
   const [currentItem, setCurrentItem] = useState({});
+  const linkedInfo = history.location.info;
 
-  useEffect(() => {
-    const item = history.location.state;
+  const logItemRecentShow = item => {
+    recentShowStorage.push(item);
+  }
 
-    if (item) {
-      recentShowStorage.push({ id: item.id, time: Date.now() });
-      setCurrentItem(item);
+  const logItemUnInterest = item => {
+    uninterestStorage.push(item);
+  }
+
+  const loadRandomIntrestItem = useCallback(async () => {
+    const isProductInterest = product => {
+      return !uninterestStorage.includes(product);
     }
-    else {
-      loadRandomItem();
-    }
-  }, [history.location.state])
 
-  const loadRandomItem = async () => {
     const products = await fetchProducts();
-    const interestProducts = products.filter(product => !uninterestStorage.includes(product));
+    const interestProducts = products.filter(isProductInterest);
 
     const item = getRandomItem(interestProducts);
 
-    recentShowStorage.push({ id: item.id, time: Date.now() });
+    logItemRecentShow({ id: item.id, time: Date.now() });
     setCurrentItem(item);
-  }
+  }, []);
+
+  useEffect(() => {
+    const showLinkedData = () => {
+      logItemRecentShow({ id: linkedInfo.id, time: Date.now() });
+      setCurrentItem(linkedInfo);
+    }
+
+    if (linkedInfo) {
+      showLinkedData();
+    }
+    else {
+      loadRandomIntrestItem();
+    }
+
+  }, [linkedInfo, loadRandomIntrestItem])
 
   const unInterest = () => {
-    uninterestStorage.push({ id: currentItem.id, time: Date.now() });
+    logItemUnInterest({ id: currentItem.id, time: Date.now() });
 
-    loadRandomItem();
+    loadRandomIntrestItem();
   }
 
   if (!currentItem.id) return null;
@@ -56,7 +72,7 @@ function Product() {
       </Description>
 
       <ButtonContainer
-        loadRandomItem={loadRandomItem}
+        loadRandomIntrestItem={loadRandomIntrestItem}
         unInterest={unInterest}
       />
     </Container>

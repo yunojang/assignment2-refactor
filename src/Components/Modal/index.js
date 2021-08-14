@@ -9,7 +9,10 @@ function Modal({ children, ...props }) {
 
   return (
     <Overlay hidden={props.hidden} data-close onClick={onClose}>
-      <Container>{children}</Container>
+      <Container>
+        <Title>{props.title}</Title>
+        {children}
+      </Container>
     </Overlay>
   )
 }
@@ -32,4 +35,10 @@ const Container = styled.div`
   background: #fff;
   padding: 20px 30px;
   border-radius: 5px;
+`;
+
+const Title = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
 `;
