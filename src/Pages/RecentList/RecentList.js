@@ -33,7 +33,8 @@ function RecentList() {
     const createBaseList = async () => {
       const products = await fetchProducts();
 
-      const baseList = products
+      const baseList = 
+      products
         .filter(isProductShow)
         .map(createShowItem)
 
