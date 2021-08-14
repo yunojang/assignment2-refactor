@@ -25,7 +25,7 @@ function RecentList() {
     const isProductShow = product => {
       return recentShowStorage.includes(product);
     }
-  
+
     const createShowItem = product => {
       return { ...product, time: recentShowStorage.list[recentShowStorage.indexOf(product)].time };
     }
@@ -49,37 +49,37 @@ function RecentList() {
       return !uninterestStorage.includes(item)
     }
 
-    const isSelectedBrand = item => {
+    const isProductShowingBrand = item => {
       return showBrands.includes(item.brand);
     }
 
-    const filterList = (baseList) => {
+    const filterList = baseList => {
       let filtedList = Array.from(baseList);
 
       if (isOnlyInterest) {
         filtedList = filtedList.filter(isProductInterest);
       }
-  
+
       if (showBrands.length) {
-        filtedList = filtedList.filter(isSelectedBrand);
+        filtedList = filtedList.filter(isProductShowingBrand);
       }
-  
+
       return filtedList;
     }
 
-    const sortList = (baseList) => {
+    const sortList = list => {
       if (sortType === SORT_TYPE.RECENT) {
-        return baseList.sort(recentSort);
+        list.sort(recentSort);
       }
       else if (sortType === SORT_TYPE.PRICE) {
-        return baseList.sort(priceSort);
+        list.sort(priceSort);
       }
     }
-    
-    const filtedList = filterList(base);
-    const sortedList = sortList(filtedList);
 
-    setList(sortedList);
+    const filtedList = filterList(base);
+    sortList(filtedList);
+
+    setList(filtedList);
 
   }, [showBrands, sortType, isOnlyInterest])
 

@@ -4,10 +4,10 @@ import Modal from 'Components/Modal';
 import Radio from 'Components/Form/Radio';
 
 function SortTypePopupButton(props) {
-  const [isOpenPopup, setIsOpenPopup] = useState(false);
+  const [popupOpend, setPopupOpend] = useState(false);
 
   const togglePopup = () => {
-    setIsOpenPopup(prev => !prev);
+    setPopupOpend(prev => !prev);
   }
 
   const onChange = e => {
@@ -21,11 +21,11 @@ function SortTypePopupButton(props) {
       <Button onClick={togglePopup}>{props.children}</Button>
 
       <Modal
+        title='정렬'
         toggle={togglePopup}
-        hidden={!isOpenPopup}
+        hidden={!popupOpend}
       >
         <Form>
-          정렬
           <Radio
             name='sort'
             value='recent'
