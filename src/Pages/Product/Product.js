@@ -21,7 +21,7 @@ function Product() {
     uninterestStorage.push(item);
   }
 
-  const loadRandomIntrestItem = useCallback(async () => {
+  const loadRandomInterestItem = useCallback(async () => {
     const isProductInterest = product => {
       return !uninterestStorage.includes(product);
     }
@@ -36,24 +36,24 @@ function Product() {
   }, []);
 
   useEffect(() => {
-    const showLinkedData = () => {
+    const loadLinkedData = () => {
       logItemRecentShow({ id: linkedInfo.id, time: Date.now() });
       setCurrentItem(linkedInfo);
     }
 
     if (linkedInfo) {
-      showLinkedData();
+      loadLinkedData();
     }
     else {
-      loadRandomIntrestItem();
+      loadRandomInterestItem();
     }
 
-  }, [linkedInfo, loadRandomIntrestItem])
+  }, [linkedInfo, loadRandomInterestItem])
 
   const unInterest = () => {
     logItemUnInterest({ id: currentItem.id, time: Date.now() });
 
-    loadRandomIntrestItem();
+    loadRandomInterestItem();
   }
 
   if (!currentItem.id) return null;
@@ -72,7 +72,7 @@ function Product() {
       </Description>
 
       <ButtonContainer
-        loadRandomIntrestItem={loadRandomIntrestItem}
+        loadRandomInterestItem={loadRandomInterestItem}
         unInterest={unInterest}
       />
     </Container>
